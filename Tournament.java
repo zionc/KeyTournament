@@ -74,7 +74,8 @@ public class Tournament {
 	private int level(Room room, int index) {
 		int leftIndex = index*2+1;
 		int rightIndex = index*2+2;
-		if(bracket.get(index) == null)
+		
+		if(index >= bracket.size())
 			return 0;
 		else if(bracket.get(index).equals(room)) 
 			return 1;
@@ -86,27 +87,36 @@ public class Tournament {
 			return 0;
 	}
 	
-	 /*public int level(Object obj) {
-	      if (root.data.equals(obj))
-	        return 1;
-	      else if (level(obj, root.left) > 0)
-	        return 1 + level(obj, root.left);
-	      else if (level(obj, root.right) > 0)
-	        return 1 + level(obj, root.right);
-	      else return -1;
-	    }
-	    private int level(Object obj, Node<E> node){
-	      if (node == null)
-	        return 0;
-	      else if (node.data.equals(obj))
-	        return 1;
-	      else if (level(obj, node.left) > 0)
-	        return 1 + level(obj, node.left);
-	      else if (level(obj, node.right) > 0)
-	        return 1 + level(obj, node.right);
-	      else
-	        return 0;
-	  } */
+	public boolean isLeaf(int index) {
+		if(index*2+1 >= bracket.size() || index*2+2 >= bracket.size()) {
+			return true;
+		}
+		else return false;
+	}
+	
+	/*public int height() {
+		if(bracket.size() == 0) {
+			
+			return 0;
+		}
+		else
+			return height(0);
+		
+	}
+	
+	public int height(int index) {
+		int leftIndex = index*2+1;
+		int rightIndex = index*2+2;
+		if(index > bracket.size())
+			return 0;
+		else {
+			if(1 + (height(leftIndex)) < height(rightIndex)) {
+				return height(rightIndex);
+			}
+			else
+				return height(leftIndex);
+		}
+	} */
 	
 	
 	public void movePlayerUp(Player player,int oldIndex) {
@@ -138,8 +148,10 @@ public class Tournament {
 	private void updateBracket(Room room, List<Player> list) {
 		
 		hashMap.put(room, list);
+		
 		room.setPlayer1(hashMap.get(room).get(0));
 		room.setPlayer2(hashMap.get(room).get(1));
+		
 	}
 	
 	
@@ -183,18 +195,15 @@ public class Tournament {
 		Player player3 = new Player("Sarah","ME","default");
 		Player player4 = new Player("Oliver","FL","default");
 		
-		ArrayList<Player> players = new ArrayList<Player>();
-		players.add(player1);
-		players.add(player2);
-		players.add(player3);
-		players.add(player4);
+		List<Player> players = Player.playersFromFile("playerinfo.txt");
 		
 		Tournament tournament = new Tournament(players);
 		System.out.println("Starting tournament: ");
 		tournament.displayTournament();
+		//System.out.println("HEIGHT: " + tournament.height());
 		
 		System.out.println("\nSimulating tournament: ");
-		//tournament.simulate();
+		
 		tournament.displayTournament();
 		
 		System.out.println("\nHash Map: ");

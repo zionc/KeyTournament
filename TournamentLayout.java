@@ -16,7 +16,7 @@ public class TournamentLayout extends BorderPane {
 	private List<Player> players = Player.playersFromFile("playerinfo.txt");
 	
 	private Tournament tournament;
-	private List<Room> bracket;
+	//private List<Room> bracket;
 	
 	private TournamentPane tournamentPane;
 	public TournamentLayout() {
@@ -24,7 +24,7 @@ public class TournamentLayout extends BorderPane {
 		tournament = new Tournament(players);
 		
 	
-		bracket = tournament.getBracket();
+		//bracket = tournament.getBracket();
 		tournamentPane = new TournamentPane(this,tournament);
 		
 		

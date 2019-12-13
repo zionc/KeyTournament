@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.Bloom;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
-
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
@@ -114,7 +112,7 @@ public class RoomPane extends StackPane implements Observable  {
 		
 			room.setWinner(room.getPlayer2());
 		}
-		//group.getChildren().addAll(winningText,finish());
+	
 		Bloom bloom = new Bloom();
 		bloom.setThreshold(0);
 		winningText.setEffect(bloom);
