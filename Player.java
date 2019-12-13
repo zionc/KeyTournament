@@ -5,27 +5,45 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
 
 /**
  * Player class represents a player in the tournament, holds the
  * value of a name, origin and description.
+ * 
+ * Hashcode method multiplies the String's hashcode return value
+ * for name, origin and description
  * @author zionchilagan
  *
  */
 
 public class Player {
 	
+	/** Name of Player */
 	private String name;
+	/** Origin of Player */
 	private String origin;
+	/** Description of Player */
 	private String description;
 
+	
+	/**
+	 * Constructs a Player with a name, origin and description
+	 * @param name - Name of Player
+	 * @param origin - Origin of Player
+	 * @param description - Description of Player
+	 */
 	public Player(String name, String origin, String description) {
 		this.name = name;
 		this.origin = origin;
 		this.description = description;
 	}
 	
+	/**
+	 * Constructs a no-arg Player with
+	 * name, origin and description set
+	 * to "default"
+	 */
 	public Player() {
 		this("default", "default", "default");
 	}
@@ -75,6 +93,7 @@ public class Player {
 	}
 
 	/**
+	 * Method to read and create Player objects from File
 	 * @param filename the filepath of the text file of Players
 	 * @return the ArrayList of Players
 	 * 
@@ -130,13 +149,18 @@ public class Player {
 
 	}
 
+	/**
+	 * String representation of Player
+	 */
 	@Override
 	public String toString() {
 		String s = "Fighter: " + name + ", born in " + origin +"\n" + description;
 		return s;
 	}
 	
-	
+	/**
+	 * Compares Object and this class for equality
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == this) {
@@ -153,23 +177,13 @@ public class Player {
 		return false;
 	}
 
-	
+	/**
+	 * Constructs an int representation of a Player
+	 */
 	@Override
 	public int hashCode() {
 		return name.hashCode() * origin.hashCode() * description.hashCode();
 	}
 
-
-	public static void main(String[] args) {
-
-
-		List<Player> playerList = playersFromFile("playerinfo.txt");
-
-		System.out.println(playerList.get(0).getName());
-		System.out.println(playerList.get(0).getOrigin());
-		System.out.println(playerList.get(0).getDescription());
-		System.out.println(playerList.get(1).getName());
-
-	}
 
 }

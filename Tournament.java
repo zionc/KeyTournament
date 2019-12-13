@@ -38,15 +38,10 @@ public class Tournament {
 			
 			updateBracket(bracket.get(i),list);
 			
-			//hashMap.put(rooms.get(i), list); //maps room to set of players
 			
 			
 		}
 		
-		/*hashMap.forEach((room,player) -> { //sets players for the room
-			room.setPlayer1(player.get(0));
-			room.setPlayer2(player.get(1));
-		}); */ 
 		
 		for(int i = 0; i < (maxRounds - startingRounds); i++) {
 			bracket.add(0, new Room());
@@ -74,7 +69,8 @@ public class Tournament {
 	private int level(Room room, int index) {
 		int leftIndex = index*2+1;
 		int rightIndex = index*2+2;
-		if(bracket.get(index) == null)
+		
+		if(index >= bracket.size())
 			return 0;
 		else if(bracket.get(index).equals(room)) 
 			return 1;
@@ -86,27 +82,12 @@ public class Tournament {
 			return 0;
 	}
 	
-	 /*public int level(Object obj) {
-	      if (root.data.equals(obj))
-	        return 1;
-	      else if (level(obj, root.left) > 0)
-	        return 1 + level(obj, root.left);
-	      else if (level(obj, root.right) > 0)
-	        return 1 + level(obj, root.right);
-	      else return -1;
-	    }
-	    private int level(Object obj, Node<E> node){
-	      if (node == null)
-	        return 0;
-	      else if (node.data.equals(obj))
-	        return 1;
-	      else if (level(obj, node.left) > 0)
-	        return 1 + level(obj, node.left);
-	      else if (level(obj, node.right) > 0)
-	        return 1 + level(obj, node.right);
-	      else
-	        return 0;
-	  } */
+	public boolean isLeaf(int index) {
+		if(index*2+1 >= bracket.size() || index*2+2 >= bracket.size()) {
+			return true;
+		}
+		else return false;
+	}
 	
 	
 	public void movePlayerUp(Player player,int oldIndex) {
@@ -124,22 +105,14 @@ public class Tournament {
 		
 	}
 	
-	/*public void simulate() {
-		
-		List<Player> list = new ArrayList<Player>();
-		for(int i = bracket.size() - 1; i >= 0; i--) {
-			Player winner = bracket.get(i).simulate();
-			
-			if(i != 0)
-				movePlayerUp(winner,i);
-		}
-	} */
 	
 	private void updateBracket(Room room, List<Player> list) {
 		
 		hashMap.put(room, list);
+		
 		room.setPlayer1(hashMap.get(room).get(0));
 		room.setPlayer2(hashMap.get(room).get(1));
+		
 	}
 	
 	
@@ -175,34 +148,6 @@ public class Tournament {
 	}
 	
 	
-	
-	public static void main(String[] args) {
-		
-		Player player1 = new Player("Zion","MA","default");
-		Player player2 = new Player("John","PA","default");
-		Player player3 = new Player("Sarah","ME","default");
-		Player player4 = new Player("Oliver","FL","default");
-		
-		ArrayList<Player> players = new ArrayList<Player>();
-		players.add(player1);
-		players.add(player2);
-		players.add(player3);
-		players.add(player4);
-		
-		Tournament tournament = new Tournament(players);
-		System.out.println("Starting tournament: ");
-		tournament.displayTournament();
-		
-		System.out.println("\nSimulating tournament: ");
-		//tournament.simulate();
-		tournament.displayTournament();
-		
-		System.out.println("\nHash Map: ");
-		tournament.displayHashMap();
-		
-		
-		
-	} 
 	
 
 }

@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 import java.util.Hashtable;
-
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -33,19 +33,21 @@ public class TournamentPane extends StackPane implements Observer {
 	private Hashtable<Integer,RoomNode> getRoom;
 	private int indexPointer;
 	private RoomNode roomPointer;
+	
 	public TournamentPane(BorderPane mainGui,Tournament tournament) {
 		this.mainGui = mainGui;
 		treeGroup = new Group();
 		this.tournament = tournament;
 		bracket = this.tournament.getBracket();
-		height = 2;
+		height = tournament.level(bracket.get(bracket.size()-1));
+		System.out.println("HEIGHT: " + height);
 		roomIndex = new Hashtable<RoomNode,Integer>();
 		getRoom = new Hashtable<Integer,RoomNode>();
 		indexPointer = 0;
 		roomPointer = null;
 		SubTree sub = new SubTree();
 		treeGroup.getChildren().add(sub);
-		
+	
 		this.setStyle("-fx-background-color: #f1faee;");
 		setAlignment(treeGroup,Pos.CENTER);
 		setMargin(treeGroup,new Insets(10,0,0,0));
@@ -61,6 +63,7 @@ public class TournamentPane extends StackPane implements Observer {
 		private int startingScale;
 		private int currentIndex;
 		private ArrayList<Line> lines;
+		
 		public SubTree() {
 			this(0);
 		}
@@ -69,6 +72,7 @@ public class TournamentPane extends StackPane implements Observer {
 			
 			lines = new ArrayList<Line>();
 			rootNode = new RoomNode(bracket.get(currentIndex));
+			//setToolTip(rootNode);
 			roomIndex.put(rootNode, index);
 			getRoom.put(index, rootNode);
 			setListeners();
@@ -85,6 +89,7 @@ public class TournamentPane extends StackPane implements Observer {
 			currentIndex = index;
 			lines = new ArrayList<Line>();
 			rootNode = new RoomNode(bracket.get(index),x,y);
+			//setToolTip(rootNode);
 			roomIndex.put(rootNode, index);
 			getRoom.put(index, rootNode);
 			setListeners();
@@ -182,7 +187,7 @@ public class TournamentPane extends StackPane implements Observer {
 		
 		private EventHandler<MouseEvent> click = mouseEvent -> {
 			RoomNode node = (RoomNode)mouseEvent.getSource();
-			if(!node.getRoom().isReady()) {
+			if(!node.getRoom().isEmpty()) {
 				indexPointer = roomIndex.get(node);
 				
 				RoomPane pane = new RoomPane(node.getRoom());
@@ -198,6 +203,7 @@ public class TournamentPane extends StackPane implements Observer {
 		private EventHandler<MouseEvent> enter = mouseEvent -> {
 			RoomNode node = (RoomNode)mouseEvent.getSource();
 			node.getRectangle().setEffect(new InnerShadow(30, Color.BLUE));
+			
 		};
 		
 		private EventHandler<MouseEvent> exit = mouseEvent -> {
@@ -205,6 +211,17 @@ public class TournamentPane extends StackPane implements Observer {
 			node.getRectangle().setEffect(null);
 		};
 		
+
+		public void setToolTip(RoomNode node) {
+			Tooltip toolTip = new Tooltip(node.getRoom().toString());
+			toolTip.setAutoHide(false);
+			toolTip.setStyle("-fx-font-size: 16px;");
+			toolTip.setAnchorX(toolTip.getAnchorX() + 6);
+			toolTip.setAnchorY(toolTip.getAnchorY());
+			Tooltip.install(node, toolTip);
+			System.out.println(toolTip.isActivated());
+			
+		}
 		
 		
 	}
@@ -225,6 +242,7 @@ public class TournamentPane extends StackPane implements Observer {
 		private Rectangle rectangle;
 		private Room room;
 		private Text text;
+		private Tooltip toolTip;
 		public RoomNode(Room room) {
 			this.room = room;
 			rectangle = new Rectangle(80,50);
@@ -237,6 +255,8 @@ public class TournamentPane extends StackPane implements Observer {
 			else
 				text.setText("Empty");
 			getChildren().addAll(rectangle,text);
+			setToolTip();
+			
 		}
 		public RoomNode(Room room,int x, int y) {
 			this(room);
@@ -263,6 +283,14 @@ public class TournamentPane extends StackPane implements Observer {
 			else
 				text.setText("Empty");
 		}
+		
+		public void setToolTip() {
+			toolTip = new Tooltip("Test");
+			toolTip.setText(room.toString());
+			Tooltip.install(this, toolTip);
+			
+		}
+		
 	}
 
 
