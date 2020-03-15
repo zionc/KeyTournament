@@ -5,29 +5,46 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
 
 /**
  * Player class represents a player in the tournament, holds the
- * value of a name, origin and description.
+ * value of a name and origin
+ * 
+ * Hashcode method multiplies the String's hashcode return value
+ * for name and origin
  * @author zionchilagan
  *
  */
 
 public class Player {
 	
+	/** Name of Player */
 	private String name;
+	/** Origin of Player */
 	private String origin;
-	private String description;
+	
 
-	public Player(String name, String origin, String description) {
+	
+	/**
+	 * Constructs a Player with a name, origin and description
+	 * @param name - Name of Player
+	 * @param origin - Origin of Player
+	 * @param description - Description of Player
+	 */
+	public Player(String name, String origin) {
 		this.name = name;
 		this.origin = origin;
-		this.description = description;
+		
 	}
 	
+	/**
+	 * Constructs a no-arg Player with
+	 * name, origin and description set
+	 * to "default"
+	 */
 	public Player() {
-		this("default", "default", "default");
+		this("default", "default");
 	}
 
 
@@ -60,21 +77,9 @@ public class Player {
 		this.origin = origin;
 	}
 
-	/**
-	 * @return the description of Player
-	 */
-	public String getDescription() {
-		return description;
-	}
 
 	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
+	 * Method to read and create Player objects from File
 	 * @param filename the filepath of the text file of Players
 	 * @return the ArrayList of Players
 	 * 
@@ -89,17 +94,17 @@ public class Player {
 
 			String name;
 			String origin;
-			String description;
+			
 
 			reader = new BufferedReader(new FileReader(new File(filename)));
 			do{
 
 				name = reader.readLine();
 				origin = reader.readLine();
-				description = reader.readLine();
+				
 
 
-				playerList.add(new Player(name, origin, description));
+				playerList.add(new Player(name, origin));
 
 
 			}
@@ -130,13 +135,18 @@ public class Player {
 
 	}
 
+	/**
+	 * String representation of Player
+	 */
 	@Override
 	public String toString() {
-		String s = "Fighter: " + name + ", born in " + origin +"\n" + description;
+		String s = "Fighter: " + name + ", born in " + origin;
 		return s;
 	}
 	
-	
+	/**
+	 * Compares Object and this class for equality
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == this) {
@@ -147,29 +157,19 @@ public class Player {
 		}
 		if(obj.getClass() == this.getClass()) {
 			Player player = (Player) obj;
-			return player.getName().equals(this.getName()) && player.getOrigin().equals(this.getOrigin())
-					&& player.getDescription().equals(this.getOrigin());
+			return player.getName().equals(this.getName()) && player.getOrigin().equals(this.getOrigin());
+				
 		}
 		return false;
 	}
 
-	
+	/**
+	 * Creates a hashcode by using String's hashcode on Player's name and origin
+	 */
 	@Override
 	public int hashCode() {
-		return name.hashCode() * origin.hashCode() * description.hashCode();
+		return name.hashCode() * origin.hashCode();
 	}
 
-
-	public static void main(String[] args) {
-
-
-		List<Player> playerList = playersFromFile("playerinfo.txt");
-
-		System.out.println(playerList.get(0).getName());
-		System.out.println(playerList.get(0).getOrigin());
-		System.out.println(playerList.get(0).getDescription());
-		System.out.println(playerList.get(1).getName());
-
-	}
 
 }

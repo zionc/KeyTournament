@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,41 +7,55 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.Bloom;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
-
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 /**
- * Simple GUI to display keys user must press, communicates
- * with Room to display Keys, definitely needs some cleaning up
+ * RoomPane is the GUI for displaying letters that each user must press.
+ * It utilizes Room to update the Key to press from each Room. This class also
+ * implements Observable so that once the game is finished, which can only happen
+ * if someone correctly types their set of letters the fastest, it notifies any
+ * observers.
  * 
+ * 
+ * TO-DO
+ * 	- RoomPane currently only displays the letters without a label for
+ * which player must press which letter not making it user friendly, must
+ * add a label for both stacks from Room
  * @author zionchilagan
  *
  */
 
 public class RoomPane extends StackPane implements Observable  {
 	
+	/** Room to gather data from */
 	private Room room;
-	
-	private Text targetKey1;
-	private Text targetKey2;
-	
+	/** Text to display the letter */
+	private Text targetKey1, targetKey2;
+	/** Layout to hold the letter */
 	private HBox container = new HBox(10);
+	/** Group to hold any components for container */
 	private Group group = new Group();
+	/** List of Observers to notify */
 	private ArrayList<Observer> observers;
+	
+	/**
+	 * Constructs a RoomPane by initializing the 
+	 * text to the first letter in both stacks from room
+	 * and handling key events.
+	 * @param room - Room to display letters from
+	 */
 	public RoomPane(Room room) {
 		//set focus to this class to accept key event
 		observers = new ArrayList<Observer>();
 		this.setFocusTraversable(true);
 		this.requestFocus();
 		this.room = room;
-		//initialize text
+	
 		targetKey1 = new Text();
 		targetKey2 = new Text();
 		
-		//HBox, lays out nodes horizontally, adds target key1 and key2 to layout
 		container.getChildren().addAll(targetKey1,targetKey2);
-		//set the style
 		container.setStyle("-fx-border-color: #a800eb;"
 				+"-fx-border-width: 5px;"); 
 		container.setPadding(new Insets(10,10,10,10));
@@ -57,6 +70,9 @@ public class RoomPane extends StackPane implements Observable  {
 		
 	}
 	
+	/**
+	 * Helper method to set a style for the keys
+	 */
 	private void styleKeys() {
 		targetKey1.setStyle("-fx-font: 100px Tahoma;"
 				+ "-fx-fill: #0015fa;"
@@ -80,8 +96,11 @@ public class RoomPane extends StackPane implements Observable  {
 		
 	}
 	
-	
-	
+	/**
+	 * Updates the letter for users by calling on
+	 * peek from their respective Stack, it the Room
+	 * is empty then a winner is set for the Room
+	 */
 	private void updateKeys() {
 		if(!room.getStack1().isEmpty()) {
 			targetKey1.setText(room.peekStack1());
@@ -96,6 +115,10 @@ public class RoomPane extends StackPane implements Observable  {
 			displayWinner(2);
 	}
 	
+	/**
+	 * Method to display who won the typing round
+	 * @param stackNum - Empty Stack to signify who won in the Room
+	 */
 	private void displayWinner(int stackNum) {
 		container.getChildren().clear();
 		Text winningText = new Text();
@@ -114,7 +137,7 @@ public class RoomPane extends StackPane implements Observable  {
 		
 			room.setWinner(room.getPlayer2());
 		}
-		//group.getChildren().addAll(winningText,finish());
+	
 		Bloom bloom = new Bloom();
 		bloom.setThreshold(0);
 		winningText.setEffect(bloom);
@@ -123,6 +146,11 @@ public class RoomPane extends StackPane implements Observable  {
 		container.setAlignment(Pos.CENTER);
 	}
 	
+	/**
+	 * Handles KeyEvents by checking if a Key was entered that matched
+	 * the top of either Stacks from Room, if a key was entered that matched
+	 * the letter from a Stack then updateStack is invoked which pops the letter
+	 */
 	private EventHandler<KeyEvent> keyInput = keyEvent -> {
 		if(keyEvent.getCode().toString().equals(targetKey1.getText())) {
 			if(!room.getStack1().isEmpty()) {
@@ -138,20 +166,27 @@ public class RoomPane extends StackPane implements Observable  {
 				updateKeys();
 			}
 		}
-		System.out.println(keyEvent.getCharacter());
+		
 		keyEvent.consume();
 	};
 
+	/**
+	 * Add observers to a list of Observer, currently only using one
+	 * but having a list will make it very easy to add a different or more
+	 * observers
+	 */
 	@Override
 	public void add(Observer o) {
-		TournamentPane tournamentPane = null;
-		if(o instanceof TournamentPane) {
-			tournamentPane = (TournamentPane)o;
-			observers.add(tournamentPane);
-		}
+		
+		observers.add(o);
 		
 	}
 
+	/**
+	 * Alerts Observers by calling on their update() method, this currently
+	 * only happens when user presses the back button which appears when someone
+	 * has won
+	 */
 	@Override
 	public void alert() {
 		for(Observer o: observers) {

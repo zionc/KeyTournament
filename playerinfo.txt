@@ -1,31 +1,23 @@
 Johnny
 Barcelona
-Johnny's description
 
 Marcus
 Guatemala
-Marcus' description
 
 Joyce
 Antarctica
-Joyce's description
 
 Leonard
 Australia
-Leonard's description
 
 Max
 USA
-Max's description
 
 Anthony
 Peru
-Anthony's description
 
 Sarah
 Greenland
-Sarah's description
 
 Jan
 Pennsylvania
-Jan's description

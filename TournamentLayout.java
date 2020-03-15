@@ -9,25 +9,35 @@ import javafx.scene.effect.Reflection;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+
+/**
+ * TournamentLayout represents the top most level container to hold all GUI components
+ * for the project. A list of players as well as the list of keys for Player 1 and Player 2
+ * 
+ * To-Do
+ * - Needs instructions and a reset button
+ * @author zionchilagan
+ *
+ */
 
 public class TournamentLayout extends BorderPane {
 	
+	/** Initialize of list of Player objects using Player's static method */
 	private List<Player> players = Player.playersFromFile("playerinfo.txt");
-	
+	/** Tournament object to encapsulate */
 	private Tournament tournament;
-	private List<Room> bracket;
-	
+	/** Layout that contains the GUI representation of the bracket */
 	private TournamentPane tournamentPane;
+	
+	/**
+	 * Constructs TournamentLayout by creating Player and Key list, and setting 
+	 * the center component to TournamentPane
+	 */
 	public TournamentLayout() {
 		Collections.shuffle(players);
+		Room.initializeKeys();
 		tournament = new Tournament(players);
-		
-	
-		bracket = tournament.getBracket();
 		tournamentPane = new TournamentPane(this,tournament);
-		
-		
 		tournament.displayTournament();
 		this.setStyle("-fx-background-color: #CAE7DF");
 		this.setCenter(tournamentPane);
@@ -37,6 +47,10 @@ public class TournamentLayout extends BorderPane {
 		setMargin(titlePane,new Insets(10,0,10,0));
 	}
 	
+	/**
+	 * Constructs the title component for the GUI
+	 * @return - HBox that contains the title
+	 */
 	public HBox getTitlePane() {
 		
 		Label titleLabel = new Label();
